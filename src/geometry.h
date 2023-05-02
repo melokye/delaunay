@@ -18,15 +18,14 @@ typedef struct Coords{
         this->y = y;
     }
 
-    Coords(const Coords& other){
-        this->x = other.x;
-        this->y = other.y;
+    Coords(int x, int y){
+        this->x = x;
+        this->y = y;
     }
 
-    Coords operator=(const Coords& other){
+    void operator=(const Coords& other){
         this->x = other.x;
         this->y = other.y;
-        return other;
     }
 
     bool operator==(const Coords& other){
@@ -57,6 +56,14 @@ struct Application{
 
     vector<Coords> points;
     vector<Triangle> triangles;
+
+    Application(int width, int height, Coords focus){
+        this->width = width;
+        this->height = height;
+        this->focus = focus;
+        // this->points
+        // this->triangles
+    }
 };
 
 void drawPoints(SDL_Renderer *renderer, const vector<Coords> &points);
