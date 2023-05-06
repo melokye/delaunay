@@ -15,14 +15,16 @@ int main(int argc, char **argv){
 
     // Creation de la fenetre
     gWindow = init("Awesome Voronoi", 720, 720);
-
-    if (!gWindow)
-    {
+    if (!gWindow){
         SDL_Log("Failed to initialize!\n");
         exit(1);
     }
 
     renderer = SDL_CreateRenderer(gWindow, -1, 0); // SDL_RENDERER_PRESENTVSYNC
+    if(renderer == nullptr){
+        cout << SDL_GetError() << "\n";
+        exit(1);
+    }
 
     /*  GAME LOOP  */
     while (true)
@@ -44,6 +46,8 @@ int main(int argc, char **argv){
 
         // PAUSE en ms
         SDL_Delay(1000 / 30);
+
+        cout << "j'affiche des trucs\n"; // TODO
     }
 
     // Free resources and close SDL
