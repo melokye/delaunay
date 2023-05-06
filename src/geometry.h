@@ -52,7 +52,7 @@ struct Triangle{
 
 struct Application{
     int width, height;
-    Coords focus{100, 100};
+    Coords focus; // {100, 100}
 
     vector<Coords> points;
     vector<Triangle> triangles;
@@ -70,7 +70,7 @@ void drawPoints(SDL_Renderer *renderer, const vector<Coords> &points);
 void drawSegments(SDL_Renderer *renderer, const vector<Segment> &segments);
 void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles);
 
-void draw(SDL_Renderer *renderer, const Application &app);
+void draw(SDL_Renderer *renderer, Application &app);
 
 bool CircumCircle(
     Point p,
@@ -80,5 +80,6 @@ bool CircumCircle(
 
 void construitVoronoi(Application &app);
 bool handleEvent(Application &app);
+void pointsToTriangle(Application &app);
 
 #endif

@@ -3,18 +3,17 @@
 void drawPoints(SDL_Renderer *renderer, const vector<Coords> &points){
     for (size_t i = 0; i < points.size(); i++){
         filledCircleRGBA(renderer, points.at(i).x, points.at(i).y, 3, 240, 240, 23, SDL_ALPHA_OPAQUE);
-        // TODO => provoque une erreur de segmentation
     }
 }
 
 void drawSegments(SDL_Renderer *renderer, const vector<Segment> &segments){
-    for (size_t i = 0; i < segments.size(); i++)
-    {
+    for (size_t i = 0; i < segments.size(); i++){
         lineRGBA(
             renderer,
             segments[i].p1.x, segments[i].p1.y,
             segments[i].p2.x, segments[i].p2.y,
-            240, 240, 20, SDL_ALPHA_OPAQUE);
+            240, 240, 20, SDL_ALPHA_OPAQUE
+        );
     }
 }
 
@@ -31,12 +30,13 @@ void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles){
     }
 }
 
-void draw(SDL_Renderer *renderer, const Application &app){
+void draw(SDL_Renderer *renderer, Application &app){
     /* TODO Remplissez cette fonction pour faire l'affichage du jeu */
     int width, height; // TODO supp ces variables, déjà présent dans app
+    // SDL_GetRendererOutputSize(renderer, &(app.width), &(app.height));
     SDL_GetRendererOutputSize(renderer, &width, &height);
     drawPoints(renderer, app.points);
-//    drawTriangles(renderer, app.triangles);
+    drawTriangles(renderer, app.triangles);
 }
 
 /*
@@ -122,6 +122,7 @@ bool handleEvent(Application &app){
             }else if (e.button.button == SDL_BUTTON_LEFT){
                 app.focus.y = 0;
                 app.points.push_back(Coords{e.button.x, e.button.y});
+                pointsToTriangle(app);
                 // construitVoronoi(app);
             }
         }
@@ -129,15 +130,17 @@ bool handleEvent(Application &app){
     return true;
 }
 
-/*
+
 void pointsToTriangle(Application &app){
     if(app.points.size() % 3 == 0){
         Point p1, p2, p3;
         p1 = app.points.back();
+        app.points.pop_back();
         p2 = app.points.back();
+        app.points.pop_back();
         p3 = app.points.back();
-        
+        app.points.pop_back();
+
         app.triangles.push_back(Triangle{p1, p2, p3});
     }
 }
-*/
