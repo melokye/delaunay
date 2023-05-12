@@ -97,11 +97,82 @@ bool CircumCircle(
     return (drsqr - *radius) <= EPSILON;
 }
 
-/*
-void construitVoronoi(Application &app){
-   // TODO construitVoronoi
+void recursivQuickSort(vector<Point>& toSort, int size){
+    if(size!=1 && size!=0){
+        Point pivot = toSort[0];
+
+        vector<Point> lowers;
+        vector<Point> greaters;
+        
+        for(int k=1;k<size;k++){
+            if(toSort[k].x < pivot.x){
+                lowers.push_back(toSort[k]);
+            }
+            else{
+                greaters.push_back(toSort[k]);
+            }
+        }
+
+        recursivQuickSort(lowers, lowers.size());
+        recursivQuickSort(greaters, greaters.size());
+
+        for(int i=0;i<lowers.size();i++){
+            toSort[i] = lowers[i];
+        }
+
+        toSort[lowers.size()] = pivot;
+
+        int temp = lowers.size()+1;
+
+        for(temp;temp<size;temp++){
+            toSort[temp] = greaters[temp-(lowers.size()+1)];
+        }
+    }    
 }
-*/
+
+void construitVoronoi(Application &app){
+    // TODO construitVoronoi
+   
+    recursivQuickSort(app.points, app.points.size());
+    app.triangles.clear();
+    app.triangles.push_back(Triangle{Point{-1000, -1000}, Point{500, 3000}, Point{1500, -1000}});
+
+    for(size_t i = 0 ; i < app.points.size(); i++){
+        Point p = app.points.at(i); // == points[i]
+        vector <Segment> LS;
+        for(int j = 0; j < app.triangles.size(); j++){
+            Triangle t = app.triangles.at(j);
+            Point center;
+            float radius;
+            if(CircumCircle(p, t.p1, t.p2, t.p3, &center, &radius)){
+                // TODO possible d'édit pour push back des triangles directement
+                LS.push_back(Segment{t.p1, t.p2});
+                LS.push_back(Segment{t.p2, t.p3});
+                LS.push_back(Segment{t.p3, t.p1});
+                app.triangles.erase(app.triangles.begin() + j);
+                j--;
+            }
+        }
+
+        for(size_t j = 0; j < LS.size(); j++){
+            for(size_t k = j + 1; k < LS.size(); k++){
+                Segment s1, s2;
+                s1 = LS.at(j);
+                s2 = LS.at(k);
+                if((s1.p1 == s2.p2) && (s1.p2 == s2.p1)){
+                    LS.erase(LS.begin() + k);
+                    k--;
+                    // TODO potentiel pb ?
+                }
+            }
+        }
+
+        for(size_t j = 0; j < LS.size(); j++){
+            Segment s = LS.at(j);
+            app.triangles.push_back(Triangle{s.p1, s.p2, p});
+        }
+    }
+}
 
 bool handleEvent(Application &app){
     /* TODO Remplissez cette fonction pour gérer les inputs utilisateurs */
@@ -122,8 +193,8 @@ bool handleEvent(Application &app){
             }else if (e.button.button == SDL_BUTTON_LEFT){
                 app.focus.y = 0;
                 app.points.push_back(Coords{e.button.x, e.button.y});
-                pointsToTriangle(app);
-                // construitVoronoi(app);
+                // pointsToTriangle(app);
+                construitVoronoi(app);
             }
         }
     }
@@ -132,15 +203,13 @@ bool handleEvent(Application &app){
 
 
 void pointsToTriangle(Application &app){
-    if(app.points.size() % 3 == 0){
-        Point p1, p2, p3;
-        p1 = app.points.back();
-        app.points.pop_back();
-        p2 = app.points.back();
-        app.points.pop_back();
-        p3 = app.points.back();
-        app.points.pop_back();
+    int i = app.points.size() - 1;
 
+    if(app.points.size() >= 3){
+        Point p1, p2, p3;
+        p1 = app.points.at(i--);
+        p2 = app.points.at(i--);
+        p3 = app.points.at(i);
         app.triangles.push_back(Triangle{p1, p2, p3});
     }
 }

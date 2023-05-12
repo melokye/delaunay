@@ -82,4 +82,5 @@ void construitVoronoi(Application &app);
 bool handleEvent(Application &app);
 void pointsToTriangle(Application &app);
 
+void recursivQuickSort(vector<Point>& toSort, int size);
 #endif
