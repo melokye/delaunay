@@ -130,12 +130,11 @@ void recursivQuickSort(vector<Point>& toSort, int size){
     }    
 }
 
-void construitVoronoi(Application &app){
-    // TODO construitVoronoi
-   
+void construitVoronoi(Application &app){   
     recursivQuickSort(app.points, app.points.size());
     app.triangles.clear();
     app.triangles.push_back(Triangle{Point{-1000, -1000}, Point{500, 3000}, Point{1500, -1000}});
+    vector <Point> centers;
 
     for(size_t i = 0 ; i < app.points.size(); i++){
         Point p = app.points.at(i); // == points[i]
@@ -151,6 +150,7 @@ void construitVoronoi(Application &app){
                 LS.push_back(Segment{t.p3, t.p1});
                 app.triangles.erase(app.triangles.begin() + j);
                 j--;
+                centers.push_back(center);
             }
         }
 
@@ -162,7 +162,6 @@ void construitVoronoi(Application &app){
                 if((s1.p1 == s2.p2) && (s1.p2 == s2.p1)){
                     LS.erase(LS.begin() + k);
                     k--;
-                    // TODO potentiel pb ?
                 }
             }
         }
@@ -201,7 +200,8 @@ bool handleEvent(Application &app){
     return true;
 }
 
-
+/* 
+// Milestone 0 :
 void pointsToTriangle(Application &app){
     int i = app.points.size() - 1;
 
@@ -213,3 +213,47 @@ void pointsToTriangle(Application &app){
         app.triangles.push_back(Triangle{p1, p2, p3});
     }
 }
+*/
+
+/*
+// Milestone 1 : 
+void construitVoronoi(Application &app){   
+    recursivQuickSort(app.points, app.points.size());
+    app.triangles.clear();
+    app.triangles.push_back(Triangle{Point{-1000, -1000}, Point{500, 3000}, Point{1500, -1000}});
+
+    for(size_t i = 0 ; i < app.points.size(); i++){
+        Point p = app.points.at(i); // == points[i]
+        vector <Segment> LS;
+        for(int j = 0; j < app.triangles.size(); j++){
+            Triangle t = app.triangles.at(j);
+            Point center;
+            float radius;
+            if(CircumCircle(p, t.p1, t.p2, t.p3, &center, &radius)){
+                LS.push_back(Segment{t.p1, t.p2});
+                LS.push_back(Segment{t.p2, t.p3});
+                LS.push_back(Segment{t.p3, t.p1});
+                app.triangles.erase(app.triangles.begin() + j);
+                j--;
+            }
+        }
+
+        for(size_t j = 0; j < LS.size(); j++){
+            for(size_t k = j + 1; k < LS.size(); k++){
+                Segment s1, s2;
+                s1 = LS.at(j);
+                s2 = LS.at(k);
+                if((s1.p1 == s2.p2) && (s1.p2 == s2.p1)){
+                    LS.erase(LS.begin() + k);
+                    k--;
+                }
+            }
+        }
+
+        for(size_t j = 0; j < LS.size(); j++){
+            Segment s = LS.at(j);
+            app.triangles.push_back(Triangle{s.p1, s.p2, p});
+        }
+    }
+}
+*/
