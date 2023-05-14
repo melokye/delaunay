@@ -161,7 +161,9 @@ void construitVoronoi(Application &app){
                 s2 = LS.at(k);
                 if((s1.p1 == s2.p2) && (s1.p2 == s2.p1)){
                     LS.erase(LS.begin() + k);
-                    k--;
+                    LS.erase(LS.begin() + j);
+                    j--;
+                    k = j + 1;
                 }
             }
         }
