@@ -82,7 +82,7 @@ void draw(SDL_Renderer *renderer, Application &app);
 bool CircumCircle(
     Point p,
     Point p1, Point p2, Point p3,
-    Point *center, float *radius
+    Coords *center, float *radius
 );
 
 void construitVoronoi(Application &app);

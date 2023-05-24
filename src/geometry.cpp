@@ -32,11 +32,15 @@ void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles){
 
 void drawPolygone(SDL_Renderer *renderer, const vector<Coords> &polygone){
     vector<Segment> segments;
-    for(size_t i = 0; i < polygone.size() - 1; i++){
-        segments.push_back(Segment{polygone[i], polygone[i + 1]});
+
+    for(size_t i = 1; i < polygone.size(); i++){
+        segments.push_back(Segment{polygone[i - 1], polygone[i]});
     }
-    if(polygone.size() > 1)
+
+    if(polygone.size() > 1){
         segments.push_back(Segment{polygone.at(polygone.size() - 1), polygone.at(0)});
+    }
+        
     drawSegments(renderer, segments);
 }
 
@@ -151,7 +155,7 @@ void construitVoronoi(Application &app){
         vector <Segment> LS;
         for(int j = 0; j < app.triangles.size(); j++){
             Triangle t = app.triangles.at(j);
-            Point center;
+            Coords center;
             float radius;
             if(CircumCircle(p, t.p1, t.p2, t.p3, &center, &radius)){
                 // TODO possible d'édit pour push back des triangles directement
