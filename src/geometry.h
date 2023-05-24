@@ -63,6 +63,8 @@ struct Application{
     vector<Triangle> triangles;
     vector<Coords> centers;
 
+    vector<float> radius; // TODO tmp
+
     Application(int width, int height, Coords focus){
         this->width = width;
         this->height = height;
@@ -75,7 +77,8 @@ struct Application{
 void drawPoints(SDL_Renderer *renderer, const vector<Coords> &points);
 void drawSegments(SDL_Renderer *renderer, const vector<Segment> &segments);
 void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles);
-void drawPolygone(SDL_Renderer *renderer, const vector<Coords> &polygone);
+void drawPolygone(SDL_Renderer *renderer, vector<Coords> &polygone);
+void drawCircle(SDL_Renderer * renderer, vector<Coords> centers, vector<float> rads);
 
 void draw(SDL_Renderer *renderer, Application &app);
 

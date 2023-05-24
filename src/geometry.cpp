@@ -1,9 +1,39 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <map>
+#include <queue>
+using namespace std;
+
 #include "geometry.h"
 
 void drawPoints(SDL_Renderer *renderer, const vector<Coords> &points){
     for (size_t i = 0; i < points.size(); i++){
         filledCircleRGBA(renderer, points.at(i).x, points.at(i).y, 3, 240, 240, 23, SDL_ALPHA_OPAQUE);
     }
+}
+
+void drawCircle(SDL_Renderer * renderer, vector<Coords> centers, vector<float> rads){
+    for(size_t i = 0; i < centers.size(); i++){
+        circleRGBA(renderer, centers.at(i).x, centers.at(i).y, rads.at(i), 255, 0, 0, SDL_ALPHA_OPAQUE);
+    }
+}
+
+short int* getX(vector<Coords> p){    
+    short int *tab = new short int[p.size()];
+    for(int i = 0; i < p.size(); i++){
+        tab[i] = p.at(i).x;
+    }
+    return tab;
+}
+
+short int* getY(vector<Coords> p){    
+    short int *tab = new short int[p.size()];
+    for(int i = 0; i < p.size(); i++){
+        tab[i] = p.at(i).y;
+    }
+    return tab;
 }
 
 void drawSegments(SDL_Renderer *renderer, const vector<Segment> &segments){
@@ -30,8 +60,16 @@ void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles){
     }
 }
 
-void drawPolygone(SDL_Renderer *renderer, const vector<Coords> &polygone){
+bool compareCoords(Coords point1, Coords point2)
+{
+    if (point1.y == point2.y)
+        return point1.x < point2.x;
+    return point1.y < point2.y;
+}
+
+void drawPolygone(SDL_Renderer *renderer, vector<Coords> &polygone){
     vector<Segment> segments;
+    recursivQuickSort(polygone, polygone.size());
 
     for(size_t i = 1; i < polygone.size(); i++){
         segments.push_back(Segment{polygone[i - 1], polygone[i]});
@@ -42,6 +80,9 @@ void drawPolygone(SDL_Renderer *renderer, const vector<Coords> &polygone){
     }
         
     drawSegments(renderer, segments);
+
+    // polygonRGBA(renderer, getX(polygone), getY(polygone),
+		// polygone.size(), 120, 30, 220, SDL_ALPHA_OPAQUE);
 }
 
 void draw(SDL_Renderer *renderer, Application &app){
@@ -51,6 +92,9 @@ void draw(SDL_Renderer *renderer, Application &app){
     SDL_GetRendererOutputSize(renderer, &width, &height);
     drawPoints(renderer, app.points);
     drawTriangles(renderer, app.triangles);
+
+    drawPoints(renderer, app.centers);
+    drawCircle(renderer, app.centers, app.radius); // TODO tmp
     drawPolygone(renderer, app.centers);
 }
 
@@ -165,7 +209,8 @@ void construitVoronoi(Application &app){
                 app.triangles.erase(app.triangles.begin() + j);
                 j--;
 
-                app.centers.push_back(center);
+                // app.radius.push_back(radius); // TODO tmp
+                // app.centers.push_back(center);
             }
         }
 
@@ -184,8 +229,16 @@ void construitVoronoi(Application &app){
         }
 
         for(size_t j = 0; j < LS.size(); j++){
+            Coords center;
+            float radius;
+
             Segment s = LS.at(j);
-            app.triangles.push_back(Triangle{s.p1, s.p2, p});
+            Triangle t = Triangle{s.p1, s.p2, p};
+            app.triangles.push_back(t);
+
+            CircumCircle(p, t.p1, t.p2, t.p3, &center, &radius);
+            app.radius.push_back(radius); // TODO tmp
+            app.centers.push_back(center);
         }
     }
 }
