@@ -30,6 +30,16 @@ void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles){
     }
 }
 
+void drawPolygone(SDL_Renderer *renderer, const vector<Coords> &polygone){
+    vector<Segment> segments;
+    for(size_t i = 0; i < polygone.size() - 1; i++){
+        segments.push_back(Segment{polygone[i], polygone[i + 1]});
+    }
+    if(polygone.size() > 1)
+        segments.push_back(Segment{polygone.at(polygone.size() - 1), polygone.at(0)});
+    drawSegments(renderer, segments);
+}
+
 void draw(SDL_Renderer *renderer, Application &app){
     /* TODO Remplissez cette fonction pour faire l'affichage du jeu */
     int width, height; // TODO supp ces variables, déjà présent dans app
@@ -37,6 +47,7 @@ void draw(SDL_Renderer *renderer, Application &app){
     SDL_GetRendererOutputSize(renderer, &width, &height);
     drawPoints(renderer, app.points);
     drawTriangles(renderer, app.triangles);
+    drawPolygone(renderer, app.centers);
 }
 
 /*
@@ -98,13 +109,13 @@ bool CircumCircle(
 }
 
 void recursivQuickSort(vector<Point>& toSort, int size){
-    if(size!=1 && size!=0){
+    if(size != 1 && size != 0){
         Point pivot = toSort[0];
 
         vector<Point> lowers;
         vector<Point> greaters;
         
-        for(int k=1;k<size;k++){
+        for(int k = 1; k < size; k++){
             if(toSort[k].x < pivot.x){
                 lowers.push_back(toSort[k]);
             }
@@ -116,7 +127,7 @@ void recursivQuickSort(vector<Point>& toSort, int size){
         recursivQuickSort(lowers, lowers.size());
         recursivQuickSort(greaters, greaters.size());
 
-        for(int i=0;i<lowers.size();i++){
+        for(int i = 0; i < lowers.size(); i++){
             toSort[i] = lowers[i];
         }
 
@@ -124,7 +135,7 @@ void recursivQuickSort(vector<Point>& toSort, int size){
 
         int temp = lowers.size()+1;
 
-        for(temp;temp<size;temp++){
+        for(temp; temp < size; temp++){
             toSort[temp] = greaters[temp-(lowers.size()+1)];
         }
     }    
@@ -134,7 +145,6 @@ void construitVoronoi(Application &app){
     recursivQuickSort(app.points, app.points.size());
     app.triangles.clear();
     app.triangles.push_back(Triangle{Point{-1000, -1000}, Point{500, 3000}, Point{1500, -1000}});
-    vector <Point> centers;
 
     for(size_t i = 0 ; i < app.points.size(); i++){
         Point p = app.points.at(i); // == points[i]
@@ -150,7 +160,8 @@ void construitVoronoi(Application &app){
                 LS.push_back(Segment{t.p3, t.p1});
                 app.triangles.erase(app.triangles.begin() + j);
                 j--;
-                centers.push_back(center);
+
+                app.centers.push_back(center);
             }
         }
 

@@ -1,11 +1,9 @@
 #ifndef GEOMETRY
 #include <iostream>
 using namespace std;
+
 #include <vector>
-
 #include "SDL2_gfxPrimitives.h"
-
-
 #define EPSILON 0.0001f
 
 typedef struct Coords{
@@ -36,6 +34,13 @@ typedef struct Coords{
 
 struct Segment{
     Coords p1, p2;
+
+    Segment(){}
+
+    Segment(Coords p1, Coords p2){
+        this->p1 = p1;
+        this->p2 = p2;
+    }
 };
 
 struct Triangle{
@@ -56,6 +61,7 @@ struct Application{
 
     vector<Coords> points;
     vector<Triangle> triangles;
+    vector<Coords> centers;
 
     Application(int width, int height, Coords focus){
         this->width = width;
@@ -69,6 +75,7 @@ struct Application{
 void drawPoints(SDL_Renderer *renderer, const vector<Coords> &points);
 void drawSegments(SDL_Renderer *renderer, const vector<Segment> &segments);
 void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles);
+void drawPolygone(SDL_Renderer *renderer, const vector<Coords> &polygone);
 
 void draw(SDL_Renderer *renderer, Application &app);
 
