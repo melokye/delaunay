@@ -52,6 +52,7 @@ bool Triangle::isEdge(Point p){
 bool Triangle::isNeighbor(Triangle &compare){
     int commun = 0;
 
+    // TODO this->p1 == compare.p1
     if(this->isEdge(compare.p1))
         commun++;
 
@@ -66,7 +67,7 @@ bool Triangle::isNeighbor(Triangle &compare){
 
 void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference){
     vector<Segment> segments;
-
+    vector<Point> centers;
     for(unsigned int i = 0; i < reference.size(); i++){
         vector<Triangle> neightbor;
         Triangle base = reference.at(i);
@@ -85,6 +86,7 @@ void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference){
         float radius; // not used but important
         CircumCircle(base.p1, base.p1, base.p2, base.p3, &center, &radius);
 
+        centers.push_back(center);
     // Create segment between base and neightbor
         for(unsigned int j = 0; j < neightbor.size(); j++){
             Triangle neighTriangle = neightbor.at(j);
