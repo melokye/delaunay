@@ -1,9 +1,14 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
+#include <iostream>
+using namespace std;
+#include <vector> // need iostream to work
+
 #include "SDL2_gfxPrimitives.h"
 #define EPSILON 0.0001f // for CircumCircle
 
+// GESTION DES POINTS ---------------------------------------
 typedef struct Coords{
     float x, y; 
 
@@ -26,7 +31,9 @@ typedef struct Coords{
     bool compare(Coords other);
 }Coords, Point;
 
+void recursivQuickSort(vector<Point>& toSort);
 
+// GESTION DES SEGMENTS ----------------------------------------
 struct Segment{
     Coords p1, p2;
 
@@ -38,6 +45,7 @@ struct Segment{
     }
 };
 
+// GESTION DES TRIANGLES ---------------------------------------
 struct Triangle{
     Point p1, p2, p3;
     bool complet;
@@ -53,6 +61,7 @@ struct Triangle{
     bool isEdge(Point p);
 };
 
+// AUTRES ---------------------------------------
 bool CircumCircle(
     Point p,
     Point p1, Point p2, Point p3,

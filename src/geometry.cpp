@@ -7,6 +7,77 @@
 
 #include "geometry.h"
 
+// GESTION DES COORDS ------------------------------------------
+
+/**
+ * @brief Compare si un point est plus petit qu'un autre    
+*/
+bool Coords::compare(Coords other){
+    if (this->y == other.y)
+        return this->x < other.x;
+    return this->y < other.y;
+}
+
+
+void recursivQuickSort(vector<Point>& toSort){
+    unsigned int size = toSort.size();
+
+    if(size <= 1){return;}
+
+    Point pivot = toSort.at(0);
+    vector<Point> lowers;
+    vector<Point> greaters;
+    
+    for(unsigned int i = 1; i < size; i++){
+        Coords compare = toSort.at(i);
+        if(compare.compare(pivot)){
+            lowers.push_back(compare);
+        }else{
+            greaters.push_back(compare);
+        }
+    }
+
+    recursivQuickSort(lowers);
+    recursivQuickSort(greaters);
+
+    unsigned int i = 0;
+    for(; i < lowers.size(); i++){
+        toSort.at(i) = lowers.at(i);
+    }
+
+    toSort.at(i++) = pivot;
+
+    unsigned int begin = i;
+    for(; i < size; i++){
+        toSort.at(i) = greaters.at(i - begin);
+    }
+}
+
+// GESTION DES SEGMENTS ----------------------------------------
+
+
+// GESTION DES TRIANGLES ---------------------------------------
+bool Triangle::isEdge(Point p){
+    return this->p1 == p || this->p2 == p || this->p3 == p;
+}
+
+bool Triangle::isNeighbor(Triangle &compare){
+    int commun = 0;
+
+    if(this->isEdge(compare.p1))
+        commun++;
+
+    if(this->isEdge(compare.p2))
+        commun++;
+
+    if(this->isEdge(compare.p3))
+        commun++;
+    // = un segment commun -> le triangle comparé est un voisin 
+    return commun == 2;
+}
+
+// AUTRES -------------------------------------------------------------
+
 /*
    Détermine si un point se trouve dans un cercle définit par trois points
    Retourne, par les paramètres, le centre et le rayon
@@ -63,36 +134,3 @@ bool CircumCircle(
 
     return (drsqr - *radius) <= EPSILON;
 }
-
-// GESTION DES COORDS ------------------------------------------
-
-/*
-    Compare si un point est plus petit qu'un autre
-*/
-bool Coords::compare(Coords other){
-    if (this->y == other.y)
-        return this->x < other.x;
-    return this->y < other.y;
-}
-
-// GESTION DES TRIANGLES ---------------------------------------
-bool Triangle::isEdge(Point p){
-    return this->p1 == p || this->p2 == p || this->p3 == p;
-}
-
-bool Triangle::isNeighbor(Triangle &compare){
-    int commun = 0;
-
-    if(this->isEdge(compare.p1))
-        commun++;
-
-    if(this->isEdge(compare.p2))
-        commun++;
-
-    if(this->isEdge(compare.p3))
-        commun++;
-    // = un segment commun -> le triangle comparé est un voisin 
-    return commun == 2;
-}
-
-// -------------------------------------------------------------

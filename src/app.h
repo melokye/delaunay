@@ -23,6 +23,4 @@ struct Application{
 
 void construitVoronoi(Application &app);
 bool handleEvent(Application &app);
-
-void recursivQuickSort(vector<Point>& toSort);
 #endif

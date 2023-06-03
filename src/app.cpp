@@ -68,37 +68,3 @@ bool handleEvent(Application &app){
     }
     return true;
 }
-
-void recursivQuickSort(vector<Point>& toSort){
-    unsigned int size = toSort.size();
-
-    if(size <= 1){return;}
-
-    Point pivot = toSort.at(0);
-    vector<Point> lowers;
-    vector<Point> greaters;
-    
-    for(unsigned int i = 1; i < size; i++){
-        Coords compare = toSort.at(i);
-        if(compare.compare(pivot)){
-            lowers.push_back(compare);
-        }else{
-            greaters.push_back(compare);
-        }
-    }
-
-    recursivQuickSort(lowers);
-    recursivQuickSort(greaters);
-
-    unsigned int i = 0;
-    for(; i < lowers.size(); i++){
-        toSort.at(i) = lowers.at(i);
-    }
-
-    toSort.at(i++) = pivot;
-
-    unsigned int begin = i;
-    for(; i < size; i++){
-        toSort.at(i) = greaters.at(i - begin);
-    }
-}
