@@ -1,7 +1,7 @@
 #include "application_ui.h"
 #include "SDL2_gfxPrimitives.h"
 
-#include "geometry.h" // TODO a effacer
+#include "app.h"
 #include "draw.h"
 
 int main(int argc, char **argv){ // variable not used but need to be here
