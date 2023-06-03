@@ -135,7 +135,7 @@ void draw(SDL_Renderer *renderer, Application &app){
 
     drawPoints(renderer, app.centers);
     drawCircle(renderer, app.centers, app.radius); // TODO tmp
-    drawPolygone(renderer, app.centers);
+    drawPolygone(renderer, app.triangles);
 }
 
 /*
