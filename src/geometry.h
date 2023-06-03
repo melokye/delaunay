@@ -27,7 +27,7 @@ typedef struct Coords{
     }
 
     bool operator==(const Coords& other){
-        return x == other.x and y == other.y;
+        return x == other.x && y == other.y;
     }
 
 }Coords, Point;
@@ -54,7 +54,7 @@ struct Triangle{
         this->complet = complet;
     }
 
-    void findNeighbor(vector<Triangle> &all,vector<Triangle> &neightbor);
+    bool isNeighbor(Triangle &compare);
 };
 
 struct Application{

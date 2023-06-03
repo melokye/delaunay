@@ -14,28 +14,6 @@ void drawPoints(SDL_Renderer *renderer, const vector<Coords> &points){
     }
 }
 
-void drawCircle(SDL_Renderer * renderer, vector<Coords> centers, vector<float> rads){
-    for(size_t i = 0; i < centers.size(); i++){
-        circleRGBA(renderer, centers.at(i).x, centers.at(i).y, rads.at(i), 255, 0, 0, SDL_ALPHA_OPAQUE);
-    }
-}
-
-short int* getX(vector<Coords> p){    
-    short int *tab = new short int[p.size()];
-    for(int i = 0; i < p.size(); i++){
-        tab[i] = p.at(i).x;
-    }
-    return tab;
-}
-
-short int* getY(vector<Coords> p){    
-    short int *tab = new short int[p.size()];
-    for(int i = 0; i < p.size(); i++){
-        tab[i] = p.at(i).y;
-    }
-    return tab;
-}
-
 void drawSegments(SDL_Renderer *renderer, const vector<Segment> &segments){
     for (size_t i = 0; i < segments.size(); i++){
         lineRGBA(
@@ -67,37 +45,44 @@ bool compareCoords(Coords point1, Coords point2)
     return point1.y < point2.y;
 }
 
-void Triangle::findNeighbor(vector<Triangle> &all,vector<Triangle> &neightbor){
-    for(int i = 0; i < all.size(); i++){
-        Triangle compare = all.at(i);
-        int commun = 0;
-        if(this->p1 == compare.p1)
-            commun++;
-        if(this->p2 == compare.p2)
-            commun++;
-        if(this->p3 == compare.p3)
-            commun++;
-        
-        if(commun == 2){ // = un segment commun
-            neightbor.push_back(compare);
-            // -> le triangle comparé est un voisin
-        }
-    }
+bool Triangle::isNeighbor(Triangle &compare){
+    int commun = 0;
+
+    // TODO this->p1 == compare.p1
+    if(compareCoords(this->p1, compare.p1))
+        commun++;
+
+    if(compareCoords(this->p2, compare.p2))
+        commun++;
+
+    if(compareCoords(this->p3, compare.p3))
+        commun++;
+    
+    return commun == 2; // = un segment commun -> le triangle comparé est un voisin 
 }
 
 void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference){
     vector<Segment> segments;
-
-    for(int i = 0; i < reference.size(); i++){
+    for(unsigned int i = 0; i < reference.size(); i++){
         vector<Triangle> neightbor;
         Triangle base = reference.at(i);
-        base.findNeighbor(reference, neightbor);
+
+    // find neightbor
+        for(unsigned int j = i + 1; j < reference.size(); j++ ){
+            Triangle compare = reference.at(j);
         
+            if(base.isNeighbor(compare)){                
+                neightbor.push_back(compare);
+            }
+        }
+        
+    // find centerCircle of each neightbor
         Point center;
-        float radius;
+        float radius; // not used but important
         CircumCircle(base.p1, base.p1, base.p2, base.p3, &center, &radius);
 
-        for(int j = 0; j < neightbor.size(); j++){
+    // Create segment between base and neightbor
+        for(unsigned int j = 0; j < neightbor.size(); j++){
             Triangle neighTriangle = neightbor.at(j);
             Point neighCenter;
 
@@ -107,22 +92,7 @@ void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference){
         }
     }
 
-    /* recursivQuickSort(polygone, polygone.size());
-
-    for(size_t i = 1; i < polygone.size(); i++){
-        segments.push_back(Segment{polygone[i - 1], polygone[i]});
-    }
-
-    if(polygone.size() > 1){
-        segments.push_back(Segment{polygone.at(polygone.size() - 1), polygone.at(0)});
-    }
-        
-    
-    */
-   drawSegments(renderer, segments);
-
-    // polygonRGBA(renderer, getX(polygone), getY(polygone),
-		// polygone.size(), 120, 30, 220, SDL_ALPHA_OPAQUE);
+    drawSegments(renderer, segments);
 }
 
 void draw(SDL_Renderer *renderer, Application &app){
@@ -134,7 +104,7 @@ void draw(SDL_Renderer *renderer, Application &app){
     drawTriangles(renderer, app.triangles);
 
     drawPoints(renderer, app.centers);
-    drawCircle(renderer, app.centers, app.radius); // TODO tmp
+    // drawCircle(renderer, app.centers, app.radius); // TODO tmp
     drawPolygone(renderer, app.triangles);
 }
 
@@ -248,9 +218,6 @@ void construitVoronoi(Application &app){
                 LS.push_back(Segment{t.p3, t.p1});
                 app.triangles.erase(app.triangles.begin() + j);
                 j--;
-
-                // app.radius.push_back(radius); // TODO tmp
-                // app.centers.push_back(center);
             }
         }
 
@@ -269,16 +236,9 @@ void construitVoronoi(Application &app){
         }
 
         for(size_t j = 0; j < LS.size(); j++){
-            Coords center;
-            float radius;
-
             Segment s = LS.at(j);
             Triangle t = Triangle{s.p1, s.p2, p};
             app.triangles.push_back(t);
-
-            CircumCircle(p, t.p1, t.p2, t.p3, &center, &radius);
-            // app.radius.push_back(radius); // TODO tmp
-            // app.centers.push_back(center);
         }
     }
 }
@@ -302,7 +262,7 @@ bool handleEvent(Application &app){
             }else if (e.button.button == SDL_BUTTON_LEFT){
                 app.focus.y = 0;
                 app.points.push_back(Coords{e.button.x, e.button.y});
-                // pointsToTriangle(app);
+                // pointsToTriangle(app); // Milestone 0
                 construitVoronoi(app);
             }
         }
