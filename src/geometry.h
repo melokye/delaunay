@@ -55,6 +55,7 @@ struct Triangle{
     }
 
     bool isNeighbor(Triangle &compare);
+    bool isEdge(Point p);
 };
 
 struct Application{

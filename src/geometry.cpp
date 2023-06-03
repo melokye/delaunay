@@ -45,17 +45,20 @@ bool compareCoords(Coords point1, Coords point2)
     return point1.y < point2.y;
 }
 
+bool Triangle::isEdge(Point p){
+    return this->p1 == p || this->p2 == p || this->p3 == p;
+}
+
 bool Triangle::isNeighbor(Triangle &compare){
     int commun = 0;
 
-    // TODO this->p1 == compare.p1
-    if(compareCoords(this->p1, compare.p1))
+    if(this->isEdge(compare.p1))
         commun++;
 
-    if(compareCoords(this->p2, compare.p2))
+    if(this->isEdge(compare.p2))
         commun++;
 
-    if(compareCoords(this->p3, compare.p3))
+    if(this->isEdge(compare.p3))
         commun++;
     
     return commun == 2; // = un segment commun -> le triangle comparé est un voisin 
@@ -63,6 +66,7 @@ bool Triangle::isNeighbor(Triangle &compare){
 
 void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference){
     vector<Segment> segments;
+
     for(unsigned int i = 0; i < reference.size(); i++){
         vector<Triangle> neightbor;
         Triangle base = reference.at(i);
@@ -87,12 +91,14 @@ void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference){
             Point neighCenter;
 
             CircumCircle(neighTriangle.p1, neighTriangle.p1, neighTriangle.p2, neighTriangle.p3, &neighCenter, &radius);
-
             segments.push_back(Segment{center, neighCenter});
+
+            centers.push_back(neighCenter);
         }
     }
 
     drawSegments(renderer, segments);
+    drawPoints(renderer, centers);
 }
 
 void draw(SDL_Renderer *renderer, Application &app){
