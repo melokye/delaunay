@@ -23,9 +23,10 @@ typedef struct Coords{
         return x == other.x && y == other.y;
     }
 
+    bool compare(Coords other);
 }Coords, Point;
 
-bool compareCoords(Coords p, Coords other);
+
 struct Segment{
     Coords p1, p2;
 

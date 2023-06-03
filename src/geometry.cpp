@@ -8,15 +8,6 @@
 #include "geometry.h"
 
 /*
-    Compare si le point p est plus petit que le point other
-*/
-bool compareCoords(Coords p, Coords other){
-    if (p.y == other.y)
-        return p.x < other.x;
-    return p.y < other.y;
-}
-
-/*
    Détermine si un point se trouve dans un cercle définit par trois points
    Retourne, par les paramètres, le centre et le rayon
 */
@@ -73,6 +64,16 @@ bool CircumCircle(
     return (drsqr - *radius) <= EPSILON;
 }
 
+// GESTION DES COORDS ------------------------------------------
+
+/*
+    Compare si un point est plus petit qu'un autre
+*/
+bool Coords::compare(Coords other){
+    if (this->y == other.y)
+        return this->x < other.x;
+    return this->y < other.y;
+}
 
 // GESTION DES TRIANGLES ---------------------------------------
 bool Triangle::isEdge(Point p){

@@ -80,7 +80,7 @@ void recursivQuickSort(vector<Point>& toSort){
     
     for(unsigned int i = 1; i < size; i++){
         Coords compare = toSort.at(i);
-        if(compareCoords(compare, pivot)){
+        if(compare.compare(pivot)){
             lowers.push_back(compare);
         }else{
             greaters.push_back(compare);
