@@ -13,7 +13,6 @@ void construitVoronoi(Application &app){
             Coords center; float radius; // variable not used but need to be here
 
             if(CircumCircle(p, t.p1, t.p2, t.p3, &center, &radius)){
-                // TODO possible d'édit pour push back des triangles directement
                 LS.push_back(Segment{t.p1, t.p2});
                 LS.push_back(Segment{t.p2, t.p3});
                 LS.push_back(Segment{t.p3, t.p1});

@@ -18,7 +18,6 @@ bool Coords::compare(Coords other){
     return this->y < other.y;
 }
 
-
 void recursivQuickSort(vector<Point>& toSort){
     unsigned int size = toSort.size();
 
