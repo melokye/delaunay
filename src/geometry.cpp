@@ -67,9 +67,47 @@ bool compareCoords(Coords point1, Coords point2)
     return point1.y < point2.y;
 }
 
-void drawPolygone(SDL_Renderer *renderer, vector<Coords> &polygone){
+void Triangle::findNeighbor(vector<Triangle> &all,vector<Triangle> &neightbor){
+    for(int i = 0; i < all.size(); i++){
+        Triangle compare = all.at(i);
+        int commun = 0;
+        if(this->p1 == compare.p1)
+            commun++;
+        if(this->p2 == compare.p2)
+            commun++;
+        if(this->p3 == compare.p3)
+            commun++;
+        
+        if(commun == 2){ // = un segment commun
+            neightbor.push_back(compare);
+            // -> le triangle comparé est un voisin
+        }
+    }
+}
+
+void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference){
     vector<Segment> segments;
-    recursivQuickSort(polygone, polygone.size());
+
+    for(int i = 0; i < reference.size(); i++){
+        vector<Triangle> neightbor;
+        Triangle base = reference.at(i);
+        base.findNeighbor(reference, neightbor);
+        
+        Point center;
+        float radius;
+        CircumCircle(base.p1, base.p1, base.p2, base.p3, &center, &radius);
+
+        for(int j = 0; j < neightbor.size(); j++){
+            Triangle neighTriangle = neightbor.at(j);
+            Point neighCenter;
+
+            CircumCircle(neighTriangle.p1, neighTriangle.p1, neighTriangle.p2, neighTriangle.p3, &neighCenter, &radius);
+
+            segments.push_back(Segment{center, neighCenter});
+        }
+    }
+
+    /* recursivQuickSort(polygone, polygone.size());
 
     for(size_t i = 1; i < polygone.size(); i++){
         segments.push_back(Segment{polygone[i - 1], polygone[i]});
@@ -79,7 +117,9 @@ void drawPolygone(SDL_Renderer *renderer, vector<Coords> &polygone){
         segments.push_back(Segment{polygone.at(polygone.size() - 1), polygone.at(0)});
     }
         
-    drawSegments(renderer, segments);
+    
+    */
+   drawSegments(renderer, segments);
 
     // polygonRGBA(renderer, getX(polygone), getY(polygone),
 		// polygone.size(), 120, 30, 220, SDL_ALPHA_OPAQUE);
@@ -237,8 +277,8 @@ void construitVoronoi(Application &app){
             app.triangles.push_back(t);
 
             CircumCircle(p, t.p1, t.p2, t.p3, &center, &radius);
-            app.radius.push_back(radius); // TODO tmp
-            app.centers.push_back(center);
+            // app.radius.push_back(radius); // TODO tmp
+            // app.centers.push_back(center);
         }
     }
 }

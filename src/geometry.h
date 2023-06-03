@@ -53,6 +53,8 @@ struct Triangle{
         this->p3 = p3;
         this->complet = complet;
     }
+
+    void findNeighbor(vector<Triangle> &all,vector<Triangle> &neightbor);
 };
 
 struct Application{
@@ -77,7 +79,7 @@ struct Application{
 void drawPoints(SDL_Renderer *renderer, const vector<Coords> &points);
 void drawSegments(SDL_Renderer *renderer, const vector<Segment> &segments);
 void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles);
-void drawPolygone(SDL_Renderer *renderer, vector<Coords> &polygone);
+void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference);
 void drawCircle(SDL_Renderer * renderer, vector<Coords> centers, vector<float> rads);
 
 void draw(SDL_Renderer *renderer, Application &app);
