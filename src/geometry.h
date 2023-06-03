@@ -1,8 +1,10 @@
-#ifndef GEOMETRY
+#ifndef GEOMETRY_H
+#define GEOMETRY_H
+
 #include <iostream>
 using namespace std;
+#include <vector> // need iostream to work
 
-#include <vector>
 #include "SDL2_gfxPrimitives.h"
 #define EPSILON 0.0001f
 
@@ -87,5 +89,5 @@ void construitVoronoi(Application &app);
 bool handleEvent(Application &app);
 void pointsToTriangle(Application &app);
 
-void recursivQuickSort(vector<Point>& toSort, int size);
+void recursivQuickSort(vector<Point>& toSort);
 #endif

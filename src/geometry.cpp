@@ -1,10 +1,9 @@
-#include <iostream>
+/* TODO not used
 #include <algorithm>
-#include <vector>
 #include <list>
 #include <map>
 #include <queue>
-using namespace std;
+*/
 
 #include "geometry.h"
 
@@ -38,8 +37,7 @@ void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles){
     }
 }
 
-bool compareCoords(Coords point1, Coords point2)
-{
+bool compareCoords(Coords point1, Coords point2){
     if (point1.y == point2.y)
         return point1.x < point2.x;
     return point1.y < point2.y;
@@ -52,7 +50,6 @@ bool Triangle::isEdge(Point p){
 bool Triangle::isNeighbor(Triangle &compare){
     int commun = 0;
 
-    // TODO this->p1 == compare.p1
     if(this->isEdge(compare.p1))
         commun++;
 
@@ -61,18 +58,19 @@ bool Triangle::isNeighbor(Triangle &compare){
 
     if(this->isEdge(compare.p3))
         commun++;
-    
-    return commun == 2; // = un segment commun -> le triangle comparé est un voisin 
+    // = un segment commun -> le triangle comparé est un voisin 
+    return commun == 2;
 }
 
 void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference){
     vector<Segment> segments;
     vector<Point> centers;
+
     for(unsigned int i = 0; i < reference.size(); i++){
         vector<Triangle> neightbor;
         Triangle base = reference.at(i);
 
-    // find neightbor
+    // find neightbors
         for(unsigned int j = i + 1; j < reference.size(); j++ ){
             Triangle compare = reference.at(j);
         
@@ -169,46 +167,46 @@ bool CircumCircle(
     return (drsqr - *radius) <= EPSILON;
 }
 
-void recursivQuickSort(vector<Point>& toSort, int size){
-    if(size != 1 && size != 0){
-        Point pivot = toSort[0];
+void recursivQuickSort(vector<Point>& toSort){
+    unsigned int size = toSort.size();
 
-        vector<Point> lowers;
-        vector<Point> greaters;
-        
-        for(int k = 1; k < size; k++){
-            if(toSort[k].x < pivot.x){
-                lowers.push_back(toSort[k]);
-            }
-            else{
-                greaters.push_back(toSort[k]);
-            }
+    if(size <= 1){return;}
+
+    Point pivot = toSort.at(0);
+    vector<Point> lowers;
+    vector<Point> greaters;
+    
+    for(unsigned int i = 1; i < size; i++){
+        if(toSort[i].x < pivot.x){ // TODO compareCoord
+            lowers.push_back(toSort[i]);
+        }else{
+            greaters.push_back(toSort[i]);
         }
+    }
 
-        recursivQuickSort(lowers, lowers.size());
-        recursivQuickSort(greaters, greaters.size());
+    recursivQuickSort(lowers);
+    recursivQuickSort(greaters);
 
-        for(unsigned int i = 0; i < lowers.size(); i++){
-            toSort[i] = lowers[i];
-        }
+    for(unsigned int i = 0; i < lowers.size(); i++){
+        toSort[i] = lowers[i];
+    }
 
-        toSort[lowers.size()] = pivot;
+    toSort[lowers.size()] = pivot;
 
-        for(unsigned int temp = lowers.size() + 1; temp < size; temp++){
-            toSort[temp] = greaters[temp-(lowers.size()+1)];
-        }
-    }    
+    for(unsigned int temp = lowers.size() + 1; temp < size; temp++){
+        toSort[temp] = greaters[temp - (lowers.size() + 1)];
+    }
 }
 
 void construitVoronoi(Application &app){   
-    recursivQuickSort(app.points, app.points.size());
+    recursivQuickSort(app.points);
     app.triangles.clear();
     app.triangles.push_back(Triangle{Point{-1000, -1000}, Point{500, 3000}, Point{1500, -1000}});
 
     for(size_t i = 0 ; i < app.points.size(); i++){
         Point p = app.points.at(i); // == points[i]
         vector <Segment> LS;
-        for(int j = 0; j < app.triangles.size(); j++){
+        for(unsigned int j = 0; j < app.triangles.size(); j++){
             Triangle t = app.triangles.at(j);
             Coords center;
             float radius;
