@@ -1,0 +1,12 @@
+// Milestone 0 : A la place de l'appel de la fonction construitVoronoi
+void pointsToTriangle(Application &app){
+    int i = app.points.size() - 1;
+
+    if(app.points.size() >= 3){
+        Point p1, p2, p3;
+        p1 = app.points.at(i--);
+        p2 = app.points.at(i--);
+        p3 = app.points.at(i);
+        app.triangles.push_back(Triangle{p1, p2, p3});
+    }
+}

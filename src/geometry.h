@@ -1,12 +1,8 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
-#include <iostream>
-using namespace std;
-#include <vector> // need iostream to work
-
 #include "SDL2_gfxPrimitives.h"
-#define EPSILON 0.0001f
+#define EPSILON 0.0001f // for CircumCircle
 
 typedef struct Coords{
     float x, y; 
@@ -29,6 +25,7 @@ typedef struct Coords{
 
 }Coords, Point;
 
+bool compareCoords(Coords p, Coords other);
 struct Segment{
     Coords p1, p2;
 
@@ -55,39 +52,10 @@ struct Triangle{
     bool isEdge(Point p);
 };
 
-struct Application{
-    int width, height;
-    Coords focus; // {100, 100}
-
-    vector<Coords> points;
-    vector<Triangle> triangles;
-
-    Application(int width, int height, Coords focus){
-        this->width = width;
-        this->height = height;
-        this->focus = focus;
-        // this->points
-        // this->triangles
-    }
-};
-
-void drawPoints(SDL_Renderer *renderer, const vector<Coords> &points);
-void drawSegments(SDL_Renderer *renderer, const vector<Segment> &segments);
-void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles);
-void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference);
-void drawCircle(SDL_Renderer * renderer, vector<Coords> centers, vector<float> rads);
-
-void draw(SDL_Renderer *renderer, Application &app);
-
 bool CircumCircle(
     Point p,
     Point p1, Point p2, Point p3,
     Coords *center, float *radius
 );
 
-void construitVoronoi(Application &app);
-bool handleEvent(Application &app);
-void pointsToTriangle(Application &app);
-
-void recursivQuickSort(vector<Point>& toSort);
 #endif

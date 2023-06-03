@@ -1,13 +1,10 @@
 #include "application_ui.h"
 #include "SDL2_gfxPrimitives.h"
-#include "geometry.h"
-#include <vector>
-#include <list>
-#include <map>
-#include <queue>
-#include <algorithm>
 
-int main(int argc, char **argv){
+#include "geometry.h" // TODO a effacer
+#include "draw.h"
+
+int main(int argc, char **argv){ // variable not used but need to be here
     SDL_Window *gWindow;
     SDL_Renderer *renderer;
     Application app{720, 720, Coords{0, 0}};
@@ -27,8 +24,7 @@ int main(int argc, char **argv){
     }
 
     /*  GAME LOOP  */
-    while (true)
-    {
+    while (true){
         // INPUTS
         is_running = handleEvent(app);
         if (!is_running)
@@ -46,8 +42,6 @@ int main(int argc, char **argv){
 
         // PAUSE en ms
         SDL_Delay(1000 / 30);
-
-        cout << "j'affiche des trucs\n"; // TODO
     }
 
     // Free resources and close SDL
