@@ -104,10 +104,8 @@ void drawPolygone(SDL_Renderer *renderer, vector<Triangle> &reference){
 }
 
 void draw(SDL_Renderer *renderer, Application &app){
-    /* TODO Remplissez cette fonction pour faire l'affichage du jeu */
-    int width, height; // TODO supp ces variables, déjà présent dans app
-    // SDL_GetRendererOutputSize(renderer, &(app.width), &(app.height));
-    SDL_GetRendererOutputSize(renderer, &width, &height);
+    SDL_GetRendererOutputSize(renderer, &(app.width), &(app.height));
+
     drawPoints(renderer, app.points);
     drawTriangles(renderer, app.triangles);
 
@@ -119,8 +117,7 @@ void draw(SDL_Renderer *renderer, Application &app){
    Retourne, par les paramètres, le centre et le rayon
 */
 bool CircumCircle(
-    Point p,
-    Point p1, Point p2, Point p3,
+    Point p, Point p1, Point p2, Point p3,
     Point *center, float *radius
 ){
     float m1, m2, mx1, mx2, my1, my2;
@@ -191,15 +188,13 @@ void recursivQuickSort(vector<Point>& toSort, int size){
         recursivQuickSort(lowers, lowers.size());
         recursivQuickSort(greaters, greaters.size());
 
-        for(int i = 0; i < lowers.size(); i++){
+        for(unsigned int i = 0; i < lowers.size(); i++){
             toSort[i] = lowers[i];
         }
 
         toSort[lowers.size()] = pivot;
 
-        int temp = lowers.size()+1;
-
-        for(temp; temp < size; temp++){
+        for(unsigned int temp = lowers.size() + 1; temp < size; temp++){
             toSort[temp] = greaters[temp-(lowers.size()+1)];
         }
     }    

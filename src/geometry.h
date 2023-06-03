@@ -21,11 +21,6 @@ typedef struct Coords{
         this->y = y;
     }
 
-    void operator=(const Coords& other){
-        this->x = other.x;
-        this->y = other.y;
-    }
-
     bool operator==(const Coords& other){
         return x == other.x && y == other.y;
     }
