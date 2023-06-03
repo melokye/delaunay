@@ -63,9 +63,6 @@ struct Application{
 
     vector<Coords> points;
     vector<Triangle> triangles;
-    vector<Coords> centers;
-
-    vector<float> radius; // TODO tmp
 
     Application(int width, int height, Coords focus){
         this->width = width;
