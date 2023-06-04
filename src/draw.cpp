@@ -25,7 +25,7 @@ void drawTriangles(SDL_Renderer *renderer, const vector<Triangle> &triangles){
             t.p1.x, t.p1.y,
             t.p2.x, t.p2.y,
             t.p3.x, t.p3.y,
-            0, 240, 160, SDL_ALPHA_OPAQUE
+            100, 100, 100, SDL_ALPHA_OPAQUE
         );
     }
 }
